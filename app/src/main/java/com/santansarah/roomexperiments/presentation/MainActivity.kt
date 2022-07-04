@@ -1,15 +1,18 @@
-package com.example.roomlists
+package com.santansarah.roomexperiments.presentation
 
 import android.app.Application
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -23,8 +26,18 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             RoomExperimentsTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(color = MaterialTheme.colorScheme.background) {
+
+                Surface(
+                    modifier = Modifier
+                        .background(
+                            brush = Brush.verticalGradient(
+                                colors = listOf(
+                                    Color(0x0FFFF000),
+                                    Color(0xFF660000)
+                                )
+                            )
+                        )
+                ) {
 
                     // instantiate our ViewModel
                     val viewModel: FlowViewModel = viewModel(
@@ -43,17 +56,22 @@ class MainActivity : ComponentActivity() {
                             modifier = Modifier.weight(1f),
                             textAlign = TextAlign.Center)
                         } else {*/
-                            LazyColumn(modifier = Modifier.weight(1f)) {
-                                items(cities) { city ->
-                                    Card(modifier = Modifier.padding(16.dp)) {
-                                        Text(
-                                            text = city.city.name + ", " + city.city.state,
-                                            textAlign = TextAlign.Center,
-                                            modifier = Modifier.padding(4.dp)
-                                        )
-                                    }
+                        LazyColumn(modifier = Modifier.weight(1f)) {
+                            items(cities) { city ->
+                                Card(
+                                    modifier = Modifier
+                                        .padding(16.dp)
+                                        .fillMaxWidth()
+                                        .height(120.dp)
+                                ) {
+                                    Text(
+                                        text = city.city.name + ", " + city.city.state,
+                                        textAlign = TextAlign.Center,
+                                        modifier = Modifier.padding(4.dp)
+                                    )
                                 }
                             }
+                        }
                         //}
                         Button(
                             onClick = { viewModel.insertCity() },
