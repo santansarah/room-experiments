@@ -1,4 +1,4 @@
-package com.example.roomlists.data.local
+package com.santansarah.roomexperiments.data.local
 
 import android.content.Context
 import androidx.room.Database
@@ -24,7 +24,7 @@ abstract class AppDatabase : RoomDatabase() {
     }
 
     /**
-     * Our database singleton. I'm using a Mutex, b/c synchronize will give us issues:
+     * My database singleton. I'm using a Mutex, b/c synchronize will give us issues:
      * `The 'populateInitialData' suspension point is inside a critical section.`
      * Our mutex could potentially lead to deadlocks? But I think it's OK here...let me know in
      * the comments or GitHub Issues if you have alternative ideas. onCreate? callbacks?

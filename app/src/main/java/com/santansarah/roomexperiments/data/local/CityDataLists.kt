@@ -1,4 +1,4 @@
-import com.example.roomlists.data.local.City
+import com.santansarah.roomexperiments.data.local.City
 
 /**
  * List of cities to prepopulate when the database is created.
@@ -11,7 +11,8 @@ val importList =
         City(0, "Phoenix", "AZ", 33.5722f, -112.0892f),
         City(0, "Houston", "TX", 29.7860f,-95.3885f),
         City(0, "Atlanta", "GA", 33.7628f,-84.4220f),
-        City(0, "San Francisco", "CA", 37.7558f,-122.4449f))
+        City(0, "San Francisco", "CA", 37.7558f,-122.4449f)
+    )
 
 /**
  * List of cities to add when we click the button. Our repo will
@@ -24,4 +25,5 @@ val cityList =
         City(0, "Denver", "CO", 39.7620f, -104.8758f),
         City(0, "Baltimore", "TX", 39.3051f,-76.6144f),
         City(0, "Las Vegas", "NV", 36.2333f,-115.2654f),
-        City(0, "Austin", "TX", 30.3005f,-97.7522f))
+        City(0, "Austin", "TX", 30.3005f,-97.7522f)
+    )

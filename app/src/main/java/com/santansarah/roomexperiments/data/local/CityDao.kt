@@ -1,8 +1,8 @@
-package com.example.roomlists.data.local
+package com.santansarah.roomexperiments.data.local
 
 import androidx.room.*
+import com.santansarah.roomexperiments.data.local.City
 import kotlinx.coroutines.flow.Flow
-
 
 @Dao
 interface CityDao {

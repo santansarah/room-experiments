@@ -1,4 +1,4 @@
-package com.santansarah.roomexperiments.ui.theme
+package com.santansarah.roomexperiments.presentation.theme
 
 import android.app.Activity
 import android.os.Build

@@ -1,4 +1,6 @@
-package com.example.roomlists.data.local
+package com.santansarah.roomexperiments.data.local
+
+import com.santansarah.roomexperiments.data.local.City
 
 data class CityAndWeather(
     val city: City,
