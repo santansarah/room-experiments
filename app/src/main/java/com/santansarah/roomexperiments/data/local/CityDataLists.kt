@@ -23,7 +23,7 @@ val cityList =
         City(0, "Seattle", "WA", 47.6211f, -122.3244f),
         City(0, "San Diego", "CA", 32.8313f, -117.1222f),
         City(0, "Denver", "CO", 39.7620f, -104.8758f),
-        City(0, "Baltimore", "TX", 39.3051f,-76.6144f),
+        City(0, "Baltimore", "MD", 39.3051f,-76.6144f),
         City(0, "Las Vegas", "NV", 36.2333f,-115.2654f),
         City(0, "Austin", "TX", 30.3005f,-97.7522f)
     )
