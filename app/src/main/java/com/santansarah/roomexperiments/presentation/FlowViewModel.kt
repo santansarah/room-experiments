@@ -5,7 +5,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.example.roomlists.FlowRepository
+import com.santansarah.roomexperiments.data.repos.FlowRepository
 import com.santansarah.roomexperiments.data.local.AppDatabase
 import com.santansarah.roomexperiments.data.local.CityAndWeather
 import com.santansarah.roomexperiments.data.local.CityDao
@@ -45,13 +45,12 @@ class FlowViewModel(application: Application) : ViewModel() {
 
             Log.d("flow", "collecting cities...")
 
-           flowRepository.getCityListAsCopy().collect { cityList ->
+           flowRepository.getCityList().collect() { cityList ->
                 viewModelState.update {
                     it.copy(cityList = cityList)
                 }
             }
 
-            //flowRepository.getCityList().toList(viewModelState.value.myList)
         }
     }
 
@@ -77,9 +76,5 @@ class FlowViewModel(application: Application) : ViewModel() {
 }
 
 data class UiState(
-    //val myList: MutableStateFlow<List<City>> = mutableStateListOf<City>()
-    //val myList: SnapshotStateList<City> = mutableStateListOf()
-    //val myList: Flow<List<City>> = emptyFlow()
-    val cityList: List<CityAndWeather> = emptyList(),
-    //val isLoading: Boolean = true
+    val cityList: List<CityAndWeather> = emptyList()
 )
