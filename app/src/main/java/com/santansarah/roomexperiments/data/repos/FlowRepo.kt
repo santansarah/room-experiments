@@ -1,4 +1,4 @@
-package com.example.roomlists
+package com.santansarah.roomexperiments.data.repos
 
 import cityList
 import com.santansarah.roomexperiments.data.local.City
@@ -19,58 +19,18 @@ class FlowRepository(private val cityDao: CityDao) {
         CURRENT_IDX++
     }
 
-    suspend fun getCityList(): Flow<City> {
+    /**
+     * testing version control.
+     */
+    suspend fun getCityList(): Flow<CityAndWeather> {
         return flow {
             cityDao.getCities().collect { cityList ->
                 cityList.forEach {
-                    delay(1000L)
-                    emit(it)
+                    // simulate a call to a weather api
+                    delay(500L)
+                    emit(CityAndWeather(city = it, weather = true))
                 }
             }
-        }
-    }
-
-    suspend fun getCityListAsCopy(): Flow<List<CityAndWeather>> {
-        var newList: MutableList<CityAndWeather> = mutableListOf()
-
-        return flow {
-            //first, return the empty cityandweather
-            cityDao.getCities().collect {
-                newList = mutableListOf()
-                for (i in 0 until it.count()) {
-                    // simulate a network call, ie:
-                    // val weather = weatherApi.getWeather(it.lat, it.long)
-                    delay(1000L)
-                    newList.add(CityAndWeather(it[i], true))
-                    emit(newList.toList())  //emit the cities 1 at a time, building on the list
-                }
-            }
-        }
-    }
-
-    suspend fun getCityListAsList(): Flow<List<City>> {
-        return cityDao.getCities()
-    }
-
-    suspend fun getCityListWithDelay(): Flow<List<City>> {
-        val cities = cityDao.getCities()
-        return cities.onEach { cityList ->
-            cityList.forEach {
-                delay(1000L)
-            }
-        }
-    }
-}
-
-suspend fun EmitNumbers(): Flow<Int> {
-    return flow<Int> {
-        val startingValue = 5
-        var currentValue = startingValue
-        emit(startingValue)
-        while (currentValue > 0) {
-            delay(1000L)
-            currentValue--
-            emit(currentValue)
         }
     }
 }
