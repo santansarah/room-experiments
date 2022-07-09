@@ -26,14 +26,21 @@ class FlowRepository(private val cityDao: CityDao) {
         return true
     }
 
-    suspend fun getCityAndWeatherOneItem(): Flow<CityAndWeather> {
+    suspend fun getCityAndWeather(): Flow<List<CityAndWeather>> {
         return flow {
-            cityDao.getCities().collect { cityList ->
+            cityDao.getCities().map { cityList ->
                 cityList.map {
-                    val weather = getWeather(it.lat, it.longitude)
-                    emit(CityAndWeather(city = it, weather = weather))
+                    CityAndWeather(city = it, weather = false)
                 }
+            }.collect { cityWeatherList ->
+                // emit CityAndWeather with no weather info
+                emit(cityWeatherList)
+                emit(cityWeatherList.map {
+                    val weather = getWeather(it.city.lat, it.city.longitude)
+                    it.copy(weather = weather)
+                })
             }
         }
     }
+
 }
