@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.*
 
 class FlowRepository(private val cityDao: CityDao) {
 
-    var CURRENT_IDX = 0
+    private var CURRENT_IDX = 0
 
     suspend fun insertCity() {
         if (CURRENT_IDX >= cityList.lastIndex)
@@ -19,10 +19,7 @@ class FlowRepository(private val cityDao: CityDao) {
         CURRENT_IDX++
     }
 
-    /**
-     * testing version control.
-     */
-    suspend fun getCityList(): Flow<CityAndWeather> {
+    suspend fun getCityAndWeatherOneItem(): Flow<CityAndWeather> {
         return flow {
             cityDao.getCities().collect { cityList ->
                 cityList.forEach {
