@@ -45,12 +45,15 @@ class FlowViewModel(application: Application) : ViewModel() {
 
             Log.d("flow", "collecting cities...")
 
-           flowRepository.getCityList().collect() { cityList ->
+            val startTimeMS = System.currentTimeMillis()
+            flowRepository.getCityAndWeatherAsList().collect { cityList ->
                 viewModelState.update {
-                    it.copy(cityList = cityList)
+                    it.copy(
+                        cityList = cityList,
+                        elapsedTimeMS = System.currentTimeMillis() - startTimeMS
+                    )
                 }
             }
-
         }
     }
 
@@ -76,5 +79,10 @@ class FlowViewModel(application: Application) : ViewModel() {
 }
 
 data class UiState(
-    val cityList: List<CityAndWeather> = emptyList()
+    val elapsedTimeMS: Long = 0,
+    //val myList: MutableStateFlow<List<City>> = mutableStateListOf<City>()
+    //val myList: SnapshotStateList<City> = mutableStateListOf()
+    //val myList: Flow<List<City>> = emptyFlow()
+    val cityList: List<CityAndWeather> = emptyList(),
+    //val isLoading: Boolean = true
 )
