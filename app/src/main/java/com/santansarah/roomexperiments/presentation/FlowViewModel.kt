@@ -7,10 +7,11 @@ import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.santansarah.roomexperiments.data.repos.FlowRepository
 import com.santansarah.roomexperiments.data.local.AppDatabase
 import com.santansarah.roomexperiments.data.local.CityAndWeather
 import com.santansarah.roomexperiments.data.local.CityDao
-import com.santansarah.roomexperiments.data.repos.FlowRepository
+
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
@@ -46,9 +47,15 @@ class FlowViewModel(application: Application) : ViewModel() {
 
             Log.d("flow", "collecting cities...")
 
-            // this won't work, b/c we'll just keep adding to the list, including dups
-            flowRepository.getCityList().toList(viewModelState.value.cityList)
-
+            val startTimeMS = System.currentTimeMillis()
+            flowRepository.getCityAndWeatherAsList().collect { cityList ->
+                viewModelState.update {
+                    it.copy(
+                        cityList = cityList,
+                        elapsedTimeMS = System.currentTimeMillis() - startTimeMS
+                    )
+                }
+            }
         }
     }
 
@@ -74,5 +81,10 @@ class FlowViewModel(application: Application) : ViewModel() {
 }
 
 data class UiState(
-    val cityList: MutableList<CityAndWeather> = mutableStateListOf()
+    val elapsedTimeMS: Long = 0,
+    //val myList: MutableStateFlow<List<City>> = mutableStateListOf<City>()
+    //val myList: SnapshotStateList<City> = mutableStateListOf()
+    //val myList: Flow<List<City>> = emptyFlow()
+    val cityList: List<CityAndWeather> = emptyList(),
+    //val isLoading: Boolean = true
 )

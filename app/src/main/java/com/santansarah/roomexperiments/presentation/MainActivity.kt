@@ -47,8 +47,10 @@ class MainActivity : ComponentActivity() {
                     val uiState = viewModel.uiState.collectAsState()
                     val cities = uiState.value.cityList
 
-                    HomeScreenContent(cities = cities, viewModel::insertCity)
-
+                    HomeScreenContent(
+                        elapsedTimeMS = uiState.value.elapsedTimeMS,
+                        cities = cities,
+                        onClick = viewModel::insertCity)
                 }
             }
         }
@@ -58,6 +60,7 @@ class MainActivity : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun HomeScreenContent(
+    elapsedTimeMS: Long,
     cities: List<CityAndWeather>,
     onClick: () -> Unit
 ) {
@@ -78,6 +81,11 @@ private fun HomeScreenContent(
                             modifier = Modifier.weight(1f),
                             textAlign = TextAlign.Center)
                         } else {*/
+
+        Text(text = "Elapsed Time: $elapsedTimeMS",
+            modifier = Modifier.fillMaxWidth()
+                .padding(6.dp))
+
         LazyColumn(modifier = Modifier.weight(1f)) {
             items(cities) { city ->
                 Card(
@@ -123,8 +131,10 @@ private fun HomeScreenContent(
 @Composable
 private fun HomeScreenPreview() {
     RoomExperimentsTheme(dynamicColor = false) {
-            HomeScreenContent(cities = cityList.map {
-                CityAndWeather(it, true)
-            }, onClick = { })
+        HomeScreenContent(cities = cityList.map {
+            CityAndWeather(it, true)
+        },
+            elapsedTimeMS = 123456L,
+            onClick = { })
     }
 }

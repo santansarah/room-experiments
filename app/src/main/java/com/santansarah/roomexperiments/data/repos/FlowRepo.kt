@@ -19,6 +19,23 @@ class FlowRepository(private val cityDao: CityDao) {
         CURRENT_IDX++
     }
 
+    suspend fun getWeather(lat: Float, longitude: Float): Boolean {
+        // simulate a call to the API
+        // insert into database cache
+        delay(500L)
+        return true
+    }
+
+    suspend fun getWeather(cities: List<City>): Flow<List<Boolean>> {
+        return flow {
+            cities.map {
+                // simulate a call to the API
+                // insert into database cache
+                delay(500L)
+                true
+            }
+        }
+    }
     suspend fun getCityAndWeatherOneItem(): Flow<CityAndWeather> {
         return flow {
             cityDao.getCities().collect { cityList ->
