@@ -1,4 +1,4 @@
-package com.example.roomlists
+package com.santansarah.roomexperiments.data.repos
 
 import cityList
 import com.santansarah.roomexperiments.data.local.City
@@ -17,6 +17,24 @@ class FlowRepository(private val cityDao: CityDao) {
 
         cityDao.insertCity(cityList[CURRENT_IDX])
         CURRENT_IDX++
+    }
+
+    suspend fun getWeather(lat: Long, longitude: Long): Boolean {
+        // simulate a call to the API
+        // insert into database cache
+        delay(500L)
+        return true
+    }
+
+    suspend fun getWeather(cities: List<City>): Flow<List<Boolean>> {
+        return flow {
+            cities.map {
+                // simulate a call to the API
+                // insert into database cache
+                delay(500L)
+                true
+            }
+        }
     }
 
     suspend fun getCityList(): Flow<City> {
@@ -58,19 +76,6 @@ class FlowRepository(private val cityDao: CityDao) {
             cityList.forEach {
                 delay(1000L)
             }
-        }
-    }
-}
-
-suspend fun EmitNumbers(): Flow<Int> {
-    return flow<Int> {
-        val startingValue = 5
-        var currentValue = startingValue
-        emit(startingValue)
-        while (currentValue > 0) {
-            delay(1000L)
-            currentValue--
-            emit(currentValue)
         }
     }
 }
