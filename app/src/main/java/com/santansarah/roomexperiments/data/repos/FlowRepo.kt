@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.*
 
 class FlowRepository(private val cityDao: CityDao) {
 
-    var CURRENT_IDX = 0
+    private var CURRENT_IDX = 0
 
     suspend fun insertCity() {
         if (CURRENT_IDX >= cityList.lastIndex)
@@ -19,7 +19,7 @@ class FlowRepository(private val cityDao: CityDao) {
         CURRENT_IDX++
     }
 
-    suspend fun getWeather(lat: Long, longitude: Long): Boolean {
+    suspend fun getWeather(lat: Float, longitude: Float): Boolean {
         // simulate a call to the API
         // insert into database cache
         delay(500L)
@@ -33,6 +33,15 @@ class FlowRepository(private val cityDao: CityDao) {
                 // insert into database cache
                 delay(500L)
                 true
+            }
+        }
+    }
+
+    suspend fun getCityAndWeatherAsList(): Flow<List<CityAndWeather>> {
+        return cityDao.getCities().map { cityList ->
+            cityList.map {
+                val weather = getWeather(it.lat, it.longitude)
+                CityAndWeather(city = it, weather = weather)
             }
         }
     }

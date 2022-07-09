@@ -46,10 +46,12 @@ class FlowViewModel(application: Application) : ViewModel() {
             Log.d("flow", "collecting cities...")
 
             val startTimeMS = System.currentTimeMillis()
-            flowRepository.getCityListAsCopy().collect { cityList ->
+            flowRepository.getCityAndWeatherAsList().collect { cityList ->
                 viewModelState.update {
-                    it.copy(cityList = cityList)
-                    it.copy(elapsedTimeMS = System.currentTimeMillis() - startTimeMS)
+                    it.copy(
+                        cityList = cityList,
+                        elapsedTimeMS = System.currentTimeMillis() - startTimeMS
+                    )
                 }
             }
         }
