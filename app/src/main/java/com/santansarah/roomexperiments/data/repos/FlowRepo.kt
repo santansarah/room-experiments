@@ -26,23 +26,12 @@ class FlowRepository(private val cityDao: CityDao) {
         return true
     }
 
-    suspend fun getWeather(cities: List<City>): Flow<List<Boolean>> {
-        return flow {
-            cities.map {
-                // simulate a call to the API
-                // insert into database cache
-                delay(500L)
-                true
-            }
-        }
-    }
     suspend fun getCityAndWeatherOneItem(): Flow<CityAndWeather> {
         return flow {
             cityDao.getCities().collect { cityList ->
-                cityList.forEach {
-                    // simulate a call to a weather api
-                    delay(500L)
-                    emit(CityAndWeather(city = it, weather = true))
+                cityList.map {
+                    val weather = getWeather(it.lat, it.longitude)
+                    emit(CityAndWeather(city = it, weather = weather))
                 }
             }
         }

@@ -3,6 +3,7 @@ package com.santansarah.roomexperiments.presentation
 import android.app.Application
 import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -48,14 +49,12 @@ class FlowViewModel(application: Application) : ViewModel() {
             Log.d("flow", "collecting cities...")
 
             val startTimeMS = System.currentTimeMillis()
-            flowRepository.getCityAndWeatherAsList().collect { cityList ->
-                viewModelState.update {
-                    it.copy(
-                        cityList = cityList,
-                        elapsedTimeMS = System.currentTimeMillis() - startTimeMS
-                    )
-                }
-            }
+
+            // this doesn't work...it just keeps adding and adding to the list with dups
+            // i don't know how to clear the list each time. i played with some variations
+            // of this...nothing seems to work.
+            flowRepository.getCityAndWeatherOneItem().toList(viewModelState.value.cityList)
+
         }
     }
 
@@ -82,9 +81,5 @@ class FlowViewModel(application: Application) : ViewModel() {
 
 data class UiState(
     val elapsedTimeMS: Long = 0,
-    //val myList: MutableStateFlow<List<City>> = mutableStateListOf<City>()
-    //val myList: SnapshotStateList<City> = mutableStateListOf()
-    //val myList: Flow<List<City>> = emptyFlow()
-    val cityList: List<CityAndWeather> = emptyList(),
-    //val isLoading: Boolean = true
+    val cityList: SnapshotStateList<CityAndWeather> = mutableStateListOf()
 )
