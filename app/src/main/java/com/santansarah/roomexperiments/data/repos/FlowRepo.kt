@@ -9,14 +9,14 @@ import kotlinx.coroutines.flow.*
 
 class FlowRepository(private val cityDao: CityDao) {
 
-    private var CURRENT_IDX = 0
+    private var cityIdx = 0
 
     suspend fun insertCity() {
-        if (CURRENT_IDX >= cityList.lastIndex)
-            CURRENT_IDX = 0
+        if (cityIdx >= cityList.lastIndex)
+            cityIdx = 0
 
-        cityDao.insertCity(cityList[CURRENT_IDX])
-        CURRENT_IDX++
+        cityDao.insertCity(cityList[cityIdx])
+        cityIdx++
     }
 
     suspend fun getWeather(lat: Float, longitude: Float): Boolean {
@@ -26,35 +26,25 @@ class FlowRepository(private val cityDao: CityDao) {
         return true
     }
 
-/*
     suspend fun getCityAndWeather(): Flow<List<CityAndWeather>> {
 
-        var initialList: List<CityAndWeather> = listOf()
-        var cityAndWeather: MutableList<CityAndWeather> = mutableListOf()
-
-        cityDao.getCities().map() { cityList ->
-            cityList.map {
+        return cityDao.getCities().transform { cityList ->
+            var cityAndWeather = cityList.map {
                 CityAndWeather(city = it, weather = false)
-            }
-        }.collect() {
-            initialList = it
-        }
+            }.toMutableList()
+            emit(cityAndWeather.toList())
 
-        return flow {
-            emit(initialList)
+            cityList.forEachIndexed() { idx, city ->
 
-            initialList.map {
-                //delay(500L)
-                cityAndWeather.add(CityAndWeather(city = it.city, weather = true))
-                emit(initialList.toList())
+                val weather = getWeather(city.lat, city.longitude)
+                cityAndWeather[idx] = cityAndWeather[idx].copy(weather = weather)
+                emit(cityAndWeather.toList())
+
             }
         }
-
     }
 
-*/
-
-    suspend fun getCityAndWeather(): Flow<List<CityAndWeather>> {
+    /*suspend fun getCityAndWeather(): Flow<List<CityAndWeather>> {
 
         return cityDao.getCities().buffer().transform { cityList ->
             var initialList = cityList.map {
@@ -72,33 +62,6 @@ class FlowRepository(private val cityDao: CityDao) {
                 emit(cityAndWeather.toList())
 
             }
-            /*cityList.map { city ->
-                val weather =  getWeather(city.lat, city.longitude)
-                cityAndWeather.add(CityAndWeather(city = city, weather = weather))
-
-                emit(cityAndWeather.toList())
-
-            }*/
         }
-    }
-
-
-/*
-    suspend fun getCityAndWeather(): Flow<List<CityAndWeather>> {
-        return flow {
-            cityDao.getCities().map { cityList ->
-                cityList.map {
-                    CityAndWeather(city = it, weather = false)
-                }
-            }.collect { cityWeatherList ->
-                emit(cityWeatherList)
-                cityWeatherList.map {
-                    val weather = getWeather(it.city.lat, it.city.longitude)
-                    emit(listOf(it.copy(weather = weather)))
-                }
-            }
-        }
-    }
-*/
-
+    }*/
 }

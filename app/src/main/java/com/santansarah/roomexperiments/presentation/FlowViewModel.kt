@@ -48,14 +48,12 @@ class FlowViewModel(application: Application) : ViewModel() {
 
             Log.d("flow", "collecting cities...")
 
-            //val startTimeMS = System.currentTimeMillis()
             try {
             flowRepository.getCityAndWeather().collect() { cityAndWeather ->
                 viewModelState.update {
                     it.copy(cityList = cityAndWeather)
                 }
             } } catch (e: Throwable) {
-                println("caught $e")
                 Log.d("debug", "$e")
             }
         }
