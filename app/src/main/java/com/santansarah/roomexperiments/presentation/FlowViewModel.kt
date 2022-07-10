@@ -80,9 +80,5 @@ class FlowViewModel(application: Application) : ViewModel() {
 
 data class UiState(
     val elapsedTimeMS: Long = 0,
-    //val myList: MutableStateFlow<List<City>> = mutableStateListOf<City>()
-    //val myList: SnapshotStateList<City> = mutableStateListOf()
-    //val myList: Flow<List<City>> = emptyFlow()
     val cityList: List<CityAndWeather> = emptyList(),
-    //val isLoading: Boolean = true
 )
