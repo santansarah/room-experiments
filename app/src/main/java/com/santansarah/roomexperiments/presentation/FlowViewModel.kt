@@ -49,12 +49,14 @@ class FlowViewModel(application: Application) : ViewModel() {
             Log.d("flow", "collecting cities...")
 
             val startTimeMS = System.currentTimeMillis()
-
-            // this doesn't work...it just keeps adding and adding to the list with dups
-            // i don't know how to clear the list each time. i played with some variations
-            // of this...nothing seems to work.
-            flowRepository.getCityAndWeatherOneItem().toList(viewModelState.value.cityList)
-
+            flowRepository.getCityAndWeatherOneAtATime().collect { cityList ->
+                viewModelState.update {
+                    it.copy(
+                        cityList = cityList,
+                        elapsedTimeMS = System.currentTimeMillis() - startTimeMS
+                    )
+                }
+            }
         }
     }
 
@@ -81,5 +83,5 @@ class FlowViewModel(application: Application) : ViewModel() {
 
 data class UiState(
     val elapsedTimeMS: Long = 0,
-    val cityList: SnapshotStateList<CityAndWeather> = mutableStateListOf()
+    val cityList: List<CityAndWeather> = listOf()
 )

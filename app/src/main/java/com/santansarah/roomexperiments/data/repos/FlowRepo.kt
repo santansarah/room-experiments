@@ -1,7 +1,6 @@
 package com.santansarah.roomexperiments.data.repos
 
 import cityList
-import com.santansarah.roomexperiments.data.local.City
 import com.santansarah.roomexperiments.data.local.CityAndWeather
 import com.santansarah.roomexperiments.data.local.CityDao
 import kotlinx.coroutines.delay
@@ -9,14 +8,14 @@ import kotlinx.coroutines.flow.*
 
 class FlowRepository(private val cityDao: CityDao) {
 
-    private var CURRENT_IDX = 0
+    private var currentIdx = 0
 
     suspend fun insertCity() {
-        if (CURRENT_IDX >= cityList.lastIndex)
-            CURRENT_IDX = 0
+        if (currentIdx >= cityList.lastIndex)
+            currentIdx = 0
 
-        cityDao.insertCity(cityList[CURRENT_IDX])
-        CURRENT_IDX++
+        cityDao.insertCity(cityList[currentIdx])
+        currentIdx++
     }
 
     suspend fun getWeather(lat: Float, longitude: Float): Boolean {
@@ -26,13 +25,15 @@ class FlowRepository(private val cityDao: CityDao) {
         return true
     }
 
-    suspend fun getCityAndWeatherOneItem(): Flow<CityAndWeather> {
-        return flow {
-            cityDao.getCities().collect { cityList ->
-                cityList.map {
-                    val weather = getWeather(it.lat, it.longitude)
-                    emit(CityAndWeather(city = it, weather = weather))
-                }
+    suspend fun getCityAndWeatherOneAtATime(): Flow<List<CityAndWeather>> {
+
+        return cityDao.getCities().transform { cityList ->
+            val cityAndWeather: MutableList<CityAndWeather> = mutableListOf()
+
+            cityList.forEach {
+                val weather = getWeather(it.lat, it.longitude)
+                cityAndWeather.add(CityAndWeather(city = it, weather = weather))
+                emit(cityAndWeather.toList())
             }
         }
     }
