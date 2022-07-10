@@ -86,7 +86,8 @@ private fun HomeScreenContent(
             modifier = Modifier.fillMaxWidth()
                 .padding(6.dp))
 
-        LazyColumn(modifier = Modifier.weight(1f)) {
+        LazyColumn(modifier = Modifier.weight(1f)
+            .fillMaxSize()) {
             items(cities) { city ->
                 Card(
                     modifier = Modifier

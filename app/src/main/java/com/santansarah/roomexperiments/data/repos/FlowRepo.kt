@@ -26,6 +26,64 @@ class FlowRepository(private val cityDao: CityDao) {
         return true
     }
 
+/*
+    suspend fun getCityAndWeather(): Flow<List<CityAndWeather>> {
+
+        var initialList: List<CityAndWeather> = listOf()
+        var cityAndWeather: MutableList<CityAndWeather> = mutableListOf()
+
+        cityDao.getCities().map() { cityList ->
+            cityList.map {
+                CityAndWeather(city = it, weather = false)
+            }
+        }.collect() {
+            initialList = it
+        }
+
+        return flow {
+            emit(initialList)
+
+            initialList.map {
+                //delay(500L)
+                cityAndWeather.add(CityAndWeather(city = it.city, weather = true))
+                emit(initialList.toList())
+            }
+        }
+
+    }
+
+*/
+
+    suspend fun getCityAndWeather(): Flow<List<CityAndWeather>> {
+
+        return cityDao.getCities().buffer().transform { cityList ->
+            var initialList = cityList.map {
+                CityAndWeather(city = it, weather = false)
+            }
+            emit(initialList)
+
+            var cityAndWeather: MutableList<CityAndWeather> = mutableListOf()
+            cityAndWeather.addAll(initialList)
+
+            initialList.forEachIndexed() { idx, cw ->
+
+                val weather = getWeather(cw.city.lat, cw.city.longitude)
+                cityAndWeather[idx] = cityAndWeather[idx].copy(weather = weather)
+                emit(cityAndWeather.toList())
+
+            }
+            /*cityList.map { city ->
+                val weather =  getWeather(city.lat, city.longitude)
+                cityAndWeather.add(CityAndWeather(city = city, weather = weather))
+
+                emit(cityAndWeather.toList())
+
+            }*/
+        }
+    }
+
+
+/*
     suspend fun getCityAndWeather(): Flow<List<CityAndWeather>> {
         return flow {
             cityDao.getCities().map { cityList ->
@@ -33,14 +91,14 @@ class FlowRepository(private val cityDao: CityDao) {
                     CityAndWeather(city = it, weather = false)
                 }
             }.collect { cityWeatherList ->
-                // emit CityAndWeather with no weather info
                 emit(cityWeatherList)
-                emit(cityWeatherList.map {
+                cityWeatherList.map {
                     val weather = getWeather(it.city.lat, it.city.longitude)
-                    it.copy(weather = weather)
-                })
+                    emit(listOf(it.copy(weather = weather)))
+                }
             }
         }
     }
+*/
 
 }
