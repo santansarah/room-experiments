@@ -28,3 +28,5 @@ displays the City and Weather data as it comes in, creating a reactive home scre
 Finally, the `clean-1` branch also builds a MutableList. This time, all Cities
 are emitted without Weather data. Then, on the home screen, the Weather portion
 is updated as it's collected from the flow.
+
+![Home Screen](home-screen.jpg)
