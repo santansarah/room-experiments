@@ -1,9 +1,11 @@
 # Jetpack Compose: Room Flows, Long Network API Calls, and Fast Loading Home Screens
 
-These Jetpack Compose Android branches demonstrate how to:
+Video: [Jetpack Compose: Room Flows, Long Network API Calls, and Fast Loading Home Screens](https://youtu.be/0hF7qAAcryc)
+
+These Android Jetpack Compose branches demonstrate how to:
 
 * Create and prepopulate a Room database
-* Return a Room Flow City List (Flow<List<City>>)
+* Return a Room Flow City List `(Flow<List<City>>)`
 * Map a list with long network API calls
 * Experiment with different ways to collect a Room flow
 * Build a reactive home screen to keep users engaged
